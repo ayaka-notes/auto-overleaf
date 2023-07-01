@@ -11,9 +11,7 @@ on:
         required: true
         default: true
 
-
 jobs:
-  # This workflow contains a single job called "build"
   build-all:
     runs-on: ubuntu-latest
     steps:
@@ -31,18 +29,29 @@ jobs:
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      
-      - name: Run Build Image
-        run: |
-          cp ./multi/* ./
-          current_dir=$(pwd)
-          git clone https://gitlab.com/overleaf-open/overleaf.git
-          cp ./Makefile ./overleaf/server-ce/Makefile
-          cd overleaf/server-ce
-          make
-          cd "$current_dir"
 
-      - name: Run Build Image with Texlive
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest .
-          docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
+        
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v4
+        with:
+          platforms: linux/amd64
+          context: ./overleaf
+          file: ./overleaf/server-ce/Dockerfile-base
+          push: true
+          tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
+
+
+      # - name: Run Build Image
+      #   run: |
+      #     cp ./multi/* ./
+      #     current_dir=$(pwd)
+      #     git clone https://gitlab.com/overleaf-open/overleaf.git
+      #     cp ./Makefile ./overleaf/server-ce/Makefile
+      #     cd overleaf/server-ce
+      #     make
+      #     cd "$current_dir"
+
+      # - name: Run Build Image with Texlive
+      #   run: |
+      #     docker buildx build --platform linux/amd64,linux/arm64 -t registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest .
+      #     docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
