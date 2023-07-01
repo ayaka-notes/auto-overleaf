@@ -37,13 +37,12 @@ jobs:
       - name: Build Push Docker images[Base]
         uses: docker/build-push-action@v4
         with:
-          registry: ${{ secrets.REGISTRY }}
           platforms: linux/amd64
           context: ./overleaf
           file: ./overleaf/server-ce/Dockerfile-base
           push: true
-          tags: overleaf-open/overleaf/sharelatex-base:latest
-
+          tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
+      
       - name: Clone Overleaf Gitlab Repo
         run: |
           docker images
