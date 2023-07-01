@@ -46,7 +46,7 @@ jobs:
           context: ./overleaf
           file: ./overleaf/server-ce/Dockerfile-base
           push: true
-          tags: overleaf/sharelatex-base:latest
+          tags: openoverleaf/sharelatex-base:latest
 
       - name: Build Push Docker images[Web]
         uses: docker/build-push-action@v4
@@ -55,9 +55,9 @@ jobs:
           context: ./overleaf
           file: ./overleaf/server-ce/Dockerfile
           push: true
-          tags: overleaf/sharelatex:origin
+          tags: openoverleaf/sharelatex:origin
           build-args: |
-            SHARELATEX_BASE_TAG=overleaf/sharelatex-base:latest
+            SHARELATEX_BASE_TAG=openoverleaf/sharelatex-base:latest
 
       
       - name: Build Push Docker images[Tex Latest]
@@ -67,5 +67,5 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: overleaf/sharelatex:latest
+          tags: openoverleaf/sharelatex:latest
       
