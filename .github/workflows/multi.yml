@@ -60,7 +60,7 @@ jobs:
             SHARELATEX_BASE_TAG=overleaf/sharelatex-base:latest
 
       
-      - name: Build Push Docker images(Tex Latest)
+      - name: Build Push Docker images[Tex Latest]
         uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64,linux/arm64
@@ -69,4 +69,3 @@ jobs:
           push: true
           tags: overleaf/sharelatex:latest
       
-
