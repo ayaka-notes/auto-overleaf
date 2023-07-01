@@ -40,13 +40,14 @@ jobs:
           platforms: linux/amd64
           context: ./overleaf
           file: ./overleaf/server-ce/Dockerfile-base
-          push: true
+          push: false
           tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
       
       - name: Clone Overleaf Gitlab Repo
         run: |
           docker images
-        
+          docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
+          
 
       
 
