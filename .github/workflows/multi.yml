@@ -43,10 +43,10 @@ jobs:
           push: true
           tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
       
-      - name: Check Push Status[Base]
-        run: |
-          docker pull registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
-          docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
+      # - name: Check Push Status[Base]
+      #   run: |
+      #     docker pull registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
+      #     docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
       
       - name: Build Push Docker images[Web]
         uses: docker/build-push-action@v4
@@ -59,10 +59,10 @@ jobs:
           build-args: |
             SHARELATEX_BASE_TAG=registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
 
-      - name: Check Push Status[Web]
-        run: |
-          docker pull registry.gitlab.com/overleaf-open/overleaf/sharelatex:origin
-          docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:origin
+      # - name: Check Push Status[Web]
+      #   run: |
+      #     docker pull registry.gitlab.com/overleaf-open/overleaf/sharelatex:origin
+      #     docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:origin
       
       - name: Build Push Docker images(Tex Latest)
         uses: docker/build-push-action@v4
@@ -73,10 +73,10 @@ jobs:
           push: true
           tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
       
-      - name: Check Push Status[Full]
-        run: |
-          docker pull registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
-          docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
+      # - name: Check Push Status[Full]
+      #   run: |
+      #     docker pull registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
+      #     docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
 
 
 
