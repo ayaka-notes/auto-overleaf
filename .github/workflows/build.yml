@@ -25,20 +25,18 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
-      - name: Run Build
+      - name: Run Build Image
         run: |
           cp ./amd64/* ./
           current_dir=$(pwd)
           git clone https://gitlab.com/overleaf-open/overleaf.git
           cp ./Makefile ./overleaf/server-ce/Makefile
           cd overleaf/server-ce
-          # make
+          make
           cd "$current_dir"
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Run Build Image with Texlive
         run: |
-          ls -l
-          # docker build -t registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-full .
-          # docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-full
+          docker build -t registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-full .
+          docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-full
 
