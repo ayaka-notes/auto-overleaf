@@ -72,6 +72,12 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
+      
+      - name: Check Push Status[Full]
+        run: |
+          docker pull registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
+          docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
+
 
 
       
