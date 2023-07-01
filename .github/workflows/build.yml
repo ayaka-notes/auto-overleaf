@@ -13,18 +13,32 @@ on:
 
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-amd64:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Login Registry
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          docker login -u $REGISTRY_USER -p $REGISTRY_TOKEN
+
+      - name: Run Build
+        run: |
+          cp ./amd64/* ./
+          current_dir=$(pwd)
+          git clone https://gitlab.com/overleaf-open/overleaf.git
+          cp ./Makefile ./overleaf/server-ce/Makefile
+          cd overleaf/server-ce
+          # make
+          cd "$current_dir"
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          ls -l
+          # docker build -t registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-full .
+          # docker push registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-full
+
