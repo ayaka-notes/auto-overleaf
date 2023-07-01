@@ -30,19 +30,26 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       
-      - name: Pull gitlab Repo
+      - name: Clone Overleaf Gitlab Repo
         run: |
           git clone https://gitlab.com/overleaf-open/overleaf.git
         
       - name: Build Push Docker images[Base]
         uses: docker/build-push-action@v4
         with:
+          registry: ${{ secrets.REGISTRY }}
           platforms: linux/amd64
           context: ./overleaf
           file: ./overleaf/server-ce/Dockerfile-base
           push: true
-          tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:latest
+          tags: overleaf-open/overleaf/sharelatex-base:latest
 
+      - name: Clone Overleaf Gitlab Repo
+        run: |
+          docker images
+        
+
+      
 
       # - name: Run Build Image
       #   run: |
