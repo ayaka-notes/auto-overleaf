@@ -13,15 +13,16 @@ MONOREPO_ROOT := ../
 all: build-base build-community push-finish
 
 
-
 build-base:
 	cp .dockerignore $(MONOREPO_ROOT)
 	docker pull $(SHARELATEX_BASE_CACHE) || echo "nothing cached yet"
-	docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile-base --pull --push --cache-from $(SHARELATEX_BASE_CACHE) -t $(SHARELATEX_BASE_TAG) $(MONOREPO_ROOT)
+	docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile-base --pull --cache-from $(SHARELATEX_BASE_CACHE) -t $(SHARELATEX_BASE_TAG) $(MONOREPO_ROOT)
+	docker push $(SHARELATEX_BASE_TAG)
 
 build-community:
 	cp .dockerignore $(MONOREPO_ROOT)
-	docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg SHARELATEX_BASE_TAG=$(SHARELATEX_BASE_TAG) --build-arg MONOREPO_REVISION -f Dockerfile -t $(SHARELATEX_TAG) $(MONOREPO_ROOT)
+	docker buildx build --platform linux/amd64,linux/arm64 --build-arg SHARELATEX_BASE_TAG=$(SHARELATEX_BASE_TAG) --build-arg MONOREPO_REVISION -f Dockerfile -t $(SHARELATEX_TAG) $(MONOREPO_ROOT)
+	docker push $(SHARELATEX_TAG)
 
 push-finish:
 	echo "push image finish!"
