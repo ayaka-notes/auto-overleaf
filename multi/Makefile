@@ -13,16 +13,16 @@ MONOREPO_ROOT := ../
 all: build-base build-community push-finish
 
 build-base:
-	cp .dockerignore $(MONOREPO_ROOT)
-	docker pull $(SHARELATEX_BASE_CACHE) || echo "nothing cached yet"
-	docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile-base --pull --cache-from $(SHARELATEX_BASE_CACHE) -t $(SHARELATEX_BASE_TAG) $(MONOREPO_ROOT)
-	docker tag sharelatex/sharelatex-base:latest $(SHARELATEX_BASE_TAG_PUSHED)
-	docker push $(SHARELATEX_BASE_TAG_PUSHED)
+	# cp .dockerignore $(MONOREPO_ROOT)
+	# docker pull $(SHARELATEX_BASE_CACHE) || echo "nothing cached yet"
+	# docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile-base --pull --cache-from $(SHARELATEX_BASE_CACHE) -t $(SHARELATEX_BASE_TAG) $(MONOREPO_ROOT)
+	# docker tag sharelatex/sharelatex-base:latest $(SHARELATEX_BASE_TAG_PUSHED)
+	# docker push $(SHARELATEX_BASE_TAG_PUSHED)
+	docker pull $(SHARELATEX_BASE_TAG_PUSHED)
 
 build-community:
 	cp .dockerignore $(MONOREPO_ROOT)
-	docker buildx build --platform linux/amd64,linux/arm64 --build-arg SHARELATEX_BASE_TAG --build-arg MONOREPO_REVISION -f Dockerfile -t $(SHARELATEX_TAG) $(MONOREPO_ROOT)
-	docker tag sharelatex/sharelatex:latest $(SHARELATEX_TAG_PUSHED)
+	docker buildx build --platform linux/amd64,linux/arm64 --build-arg SHARELATEX_BASE_TAG --build-arg MONOREPO_REVISION -f Dockerfile -t $(SHARELATEX_TAG_PUSHED) $(MONOREPO_ROOT)
 	docker push $(SHARELATEX_TAG_PUSHED)
 
 push-finish:
