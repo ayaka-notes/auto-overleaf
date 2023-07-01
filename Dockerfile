@@ -1,7 +1,6 @@
 # docker build -t registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest .
 
-FROM registry.gitlab.com/overleaf-open/overleaf/sharelatex:latest
-
+FROM registry.gitlab.com/overleaf-open/overleaf/sharelatex:origin
 
 # 安装TexLive2023
 # RUN tlmgr option repository https://cran.asia/tex/systems/texlive/tlnet/
