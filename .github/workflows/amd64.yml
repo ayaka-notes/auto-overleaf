@@ -27,11 +27,7 @@ jobs:
       - name: Clone Overleaf Gitlab Repo
         run: |
           git clone https://gitlab.com/overleaf-open/overleaf.git
-      
-      - name: Replace Dockerfile
-        run: |
-          cp ./Dockerfile.base.arm64 ./overleaf/server-ce/Dockerfile-base
-
+        
       - name: Build Push Docker images[Base]
         uses: docker/build-push-action@v4
         with:
