@@ -1,0 +1,95 @@
+# --------------------------------------------------
+# Overleaf Base Image With Texlive-2023
+# --------------------------------------------------
+
+# [2023.7.2]
+# Musicminion
+# For arm64 server, if you build original base image and then build
+# sharelatex image, and finally if you want to update texlive 2023
+# Things will go wrong, maybe build fulltexlive image is a good
+# choice.
+
+FROM phusion/baseimage:focal-1.2.0
+
+# Makes sure LuaTex cache is writable
+# -----------------------------------
+ENV TEXMFVAR=/var/lib/sharelatex/tmp/texmf-var
+
+# I think Setup env is important.
+# -----------------------------------
+ENV PATH="${PATH}:/usr/local/texlive/2023/bin/aarch64-linux"
+
+# Update to ensure dependencies are updated
+# ------------------------------------------
+ENV REBUILT_AFTER="2023-03-13"
+
+# Install dependencies
+# --------------------
+RUN apt-get update \
+&&  apt-get install -y \
+      build-essential wget net-tools unzip time imagemagick optipng strace nginx git python3 zlib1g-dev libpcre3-dev gettext-base libwww-perl \
+      qpdf \
+      aspell aspell-en aspell-af aspell-am aspell-ar aspell-ar-large aspell-bg aspell-bn aspell-br aspell-ca aspell-cs aspell-cy aspell-da aspell-de aspell-de-1901 aspell-el aspell-eo aspell-es aspell-et aspell>
+    \
+# install Node.JS 16
+&&  curl -sSL https://deb.nodesource.com/setup_16.x | bash - \
+&&  apt-get install -y nodejs \
+    \
+&&  rm -rf \
+# We are adding a custom nginx config in the main Dockerfile.
+      /etc/nginx/nginx.conf \
+      /etc/nginx/sites-enabled/default \
+      /var/lib/apt/lists/*
+
+# Install TexLive
+# ---------------
+# CTAN mirrors occasionally fail, in that case install TexLive using a
+# different server, for example https://ctan.crest.fr
+#
+# # docker build \
+#     --build-arg TEXLIVE_MIRROR=https://ctan.crest.fr/tex-archive/systems/texlive/tlnet \
+#     -f Dockerfile-base -t sharelatex/sharelatex-base .
+ARG TEXLIVE_MIRROR=https://mirror.kku.ac.th/CTAN/systems/texlive/tlnet
+#https://mirror-hk.koddos.net/CTAN/systems/texlive/tlnet
+
+RUN mkdir /install-tl-unx \
+&&  wget --quiet https://tug.org/texlive/files/texlive.asc \
+&&  gpg --import texlive.asc \
+&&  rm texlive.asc \
+&&  wget --quiet ${TEXLIVE_MIRROR}/install-tl-unx.tar.gz \
+&&  wget --quiet ${TEXLIVE_MIRROR}/install-tl-unx.tar.gz.sha512 \
+&&  wget --quiet ${TEXLIVE_MIRROR}/install-tl-unx.tar.gz.sha512.asc \
+&&  gpg --verify install-tl-unx.tar.gz.sha512.asc \
+&&  sha512sum -c install-tl-unx.tar.gz.sha512 \
+&&  tar -xz -C /install-tl-unx --strip-components=1 -f install-tl-unx.tar.gz \
+&&  rm install-tl-unx.tar.gz* \
+&&  echo "tlpdbopt_autobackup 0" >> /install-tl-unx/texlive.profile \
+&&  echo "tlpdbopt_install_docfiles 0" >> /install-tl-unx/texlive.profile \
+&&  echo "tlpdbopt_install_srcfiles 0" >> /install-tl-unx/texlive.profile \
+&&  echo "selected_scheme scheme-basic" >> /install-tl-unx/texlive.profile \
+    \
+&&  /install-tl-unx/install-tl \
+      --no-interaction \
+#      -profile /install-tl-unx/texlive.profile \
+      --location ${TEXLIVE_MIRROR} \
+    \
+&&  $(find /usr/local/texlive -name tlmgr) path add \
+#&&  tlmgr install --repository ${TEXLIVE_MIRROR} \
+#      latexmk \
+#      texcount \
+#      synctex \
+#      etoolbox \
+#    \
+&&  tlmgr path add \
+&&  rm -rf /install-tl-unx
+
+
+# Set up sharelatex user and home directory
+# -----------------------------------------
+RUN adduser --system --group --home /overleaf --no-create-home sharelatex && \
+        mkdir -p /var/lib/sharelatex && \
+        chown www-data:www-data /var/lib/sharelatex && \
+        mkdir -p /var/log/sharelatex && \
+        chown www-data:www-data /var/log/sharelatex && \
+        mkdir -p /var/lib/sharelatex/data/template_files && \
+        chown www-data:www-data /var/lib/sharelatex/data/template_files
