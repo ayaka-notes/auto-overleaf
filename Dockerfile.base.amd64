@@ -74,7 +74,7 @@ RUN mkdir /install-tl-unx \
     \
 &&  /install-tl-unx/install-tl \
       --no-interaction \
-      --location ${TEXLIVE_MIRROR} \
+    #   --location ${TEXLIVE_MIRROR} \
     \
 &&  $(find /usr/local/texlive -name tlmgr) path add \
 &&  tlmgr path add \
