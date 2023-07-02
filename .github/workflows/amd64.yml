@@ -30,9 +30,9 @@ jobs:
       
       - name: Replace Dockerfile
         run: |
-          cp ./Dockerfile.base.amd64 ./overleaf/server-ce/Dockerfile-base
+          cp ./Dockerfile.base.arm64 ./overleaf/server-ce/Dockerfile-base
 
-      - name: Build Push Docker images[Base+TexLive]
+      - name: Build Push Docker images[Base]
         uses: docker/build-push-action@v4
         with:
           context: ./overleaf
@@ -46,16 +46,16 @@ jobs:
           context: ./overleaf
           file: ./overleaf/server-ce/Dockerfile
           push: true
-          tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-latest
+          tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-origin
           build-args: |
             SHARELATEX_BASE_TAG=registry.gitlab.com/overleaf-open/overleaf/sharelatex-base:amd64-latest
 
       
-      # - name: Build Push Docker images[Tex Latest]
-      #   uses: docker/build-push-action@v4
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile.amd64
-      #     push: true
-      #     tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-latest
+      - name: Build Push Docker images[Tex Latest]
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile.amd64
+          push: true
+          tags: registry.gitlab.com/overleaf-open/overleaf/sharelatex:amd64-latest
 
